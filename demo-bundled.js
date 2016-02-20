@@ -10,27 +10,21 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
   className: "highlightable",
   onChange: onChange.bind(undefined),
   token: [Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION],
-  highlighter: [function (link) {
-    return '<span class="hilite hilite--link">' + link + '</span>';
-  }, function (user) {
-    return '<span class="hilite hilite--user hilite--user-' + (~validUsers.indexOf(user.slice('@'.length)) ? 'valid' : 'invalid') + '">' + user + '</span>';
+  tokenClassName: ['hilite hilite--link', function (token) {
+    return 'hilite hilite--user hilite--user-' + (~validUsers.indexOf(token.slice('@'.length)) ? 'valid' : 'invalid');
   }],
   value: "@jasmine and @belle are you still there? Visit www.google.com"
 }), React.createElement("h3", null, "Example 2: Email"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange.bind(undefined),
   token: Highlightable.TokenPreset.EMAIL,
-  highlighter: function highlighter(email) {
-    return '<span class="hilite hilite--email" href="mailto:' + email + '">' + email + '</span>';
-  },
+  tokenClassName: "hilite hilite--email",
   value: "Give me an email to example@example.com."
 }), React.createElement("h3", null, "Example 3: Prohibited tokens"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange.bind(undefined),
   token: "yeah|ohh",
-  highlighter: function highlighter(token) {
-    return '<span class="hilite hilite--token">' + token + '</span>';
-  },
+  tokenClassName: "hilite hilite--token",
   value: "Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque."
 })), document.getElementById('app'));
 
@@ -52,6 +46,10 @@ function _interopRequireDefault(obj) {
 // Excellent work by Ömür Yanıkoğlu
 // Thanks: http://stackoverflow.com/a/21437499
 module.exports = {
+
+    keyIsAvailable: function keyIsAvailable(e) {
+        return e.keyCode == 32 || e.keyCode > 47 && e.keyCode < 91 && !e.ctrlKey && !e.shiftKey && !e.altKey;
+    },
 
     saveSelection: function saveSelection(containerEl) {
         var charIndex = 0,
@@ -137,17 +135,11 @@ module.exports = {
 },{"rangy":87}],3:[function(require,module,exports){
 'use strict';
 
-var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
-  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
-};
 
 var _createClass = function () {
   function defineProperties(target, props) {
@@ -198,12 +190,12 @@ function _classCallCheck(instance, Constructor) {
 function _possibleConstructorReturn(self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }return call && ((typeof call === "undefined" ? "undefined" : _typeof2(call)) === "object" || typeof call === "function") ? call : self;
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
 }
 
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof2(superClass)));
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
@@ -238,30 +230,23 @@ var Highlightable = function (_React$Component) {
         }
         _powerAssert2.default.fail();
       });
-      if (Array.isArray(this.props.highlighter)) {
+      if (Array.isArray(this.props.tokenClassName)) {
         var _rec2 = new _powerAssertRecorder();
 
-        (0, _powerAssert2.default)(_rec2._expr(_rec2._capt(_rec2._capt(_rec2._capt(this.regexes_, 'arguments/0/left/object').length, 'arguments/0/left') === _rec2._capt(_rec2._capt(_rec2._capt(this.props, 'arguments/0/right/object/object').highlighter, 'arguments/0/right/object').length, 'arguments/0/right'), 'arguments/0'), {
-          content: 'assert(this.regexes_.length === this.props.highlighter.length)',
+        (0, _powerAssert2.default)(_rec2._expr(_rec2._capt(_rec2._capt(_rec2._capt(this.regexes_, 'arguments/0/left/object').length, 'arguments/0/left') === _rec2._capt(_rec2._capt(_rec2._capt(this.props, 'arguments/0/right/object/object').tokenClassName, 'arguments/0/right/object').length, 'arguments/0/right'), 'arguments/0'), {
+          content: 'assert(this.regexes_.length === this.props.tokenClassName.length)',
           filepath: 'src/react-highlightable.js',
           line: 25
         }));
-        this.highlighters_ = this.props.highlighter;
+        this.tokenClassNames_ = this.props.tokenClassName;
       } else {
-        var _rec3 = new _powerAssertRecorder();
-
-        (0, _powerAssert2.default)(_rec3._expr(_rec3._capt(_rec3._capt(_typeof(_rec3._capt(_rec3._capt(this.props, 'arguments/0/left/argument/object').highlighter, 'arguments/0/left/argument')), 'arguments/0/left') === 'function', 'arguments/0'), {
-          content: 'assert(typeof this.props.highlighter === \'function\')',
-          filepath: 'src/react-highlightable.js',
-          line: 28
-        }));
-        this.highlighters_ = [this.props.highlighter];
+        this.tokenClassNames_ = [this.props.tokenClassName];
       }
     }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.highlight_(this.htmlEl_.textContent);
+      this.highlight_();
     }
   }, {
     key: 'render',
@@ -272,7 +257,7 @@ var Highlightable = function (_React$Component) {
         ref: function ref(e) {
           return _this2.htmlEl_ = e;
         },
-        onInput: this.emitChange_,
+        onKeyUp: this.emitChange_,
         onBlur: this.emitChange_,
         contentEditable: !this.props.disabled,
         dangerouslySetInnerHTML: { __html: this.props.value }
@@ -286,33 +271,38 @@ var Highlightable = function (_React$Component) {
   }, {
     key: 'emitChange_',
     value: function emitChange_(evt) {
-      var textContent = this.htmlEl_.textContent;
-      if (textContent !== this.lastTextContent_) {
-        this.highlight_(textContent);
+      if (this.htmlEl_.innerHTML !== this.lastInnerHTML) {
+
+        if (_helper2.default.keyIsAvailable(evt.nativeEvent)) {
+          var pos = _helper2.default.saveSelection(this.htmlEl_);
+          this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g, "$1");
+          this.highlight_();
+          _helper2.default.restoreSelection(this.htmlEl_, pos);
+        }
+
         if (this.props.onChange) {
-          evt.target.value = textContent;
+          var newlinePlaceHolder = '%%newline%%';
+          var fragment = document.createElement('div');
+          fragment.innerHTML = this.htmlEl_.innerHTML.replace(/<br>/g, newlinePlaceHolder);
+          var value = fragment.textContent.replace(new RegExp(newlinePlaceHolder, 'g'), '\n');
+          evt.target.value = value;
           this.props.onChange(evt);
         }
       }
-      this.lastTextContent_ = textContent;
+      this.lastInnerHTML = this.htmlEl_.innerHTML;
     }
   }, {
     key: 'highlight_',
-    value: function highlight_(textContent) {
+    value: function highlight_() {
       var _this3 = this;
 
-      var pos = undefined;
-      try {
-        pos = _helper2.default.saveSelection(this.htmlEl_);
-      } catch (e) {}
-      this.htmlEl_.innerHTML = this.regexes_.reduce(function (textContent, regex, index) {
-        return textContent.replace(regex, function (_, token, offset) {
-          return _this3.highlighters_[index](token, offset);
+      this.htmlEl_.innerHTML = this.regexes_.reduce(function (innerHTML, regex, index) {
+        return innerHTML.replace(regex, function (_, token) {
+          var tokenClassName = _this3.tokenClassNames_[index];
+          var className = typeof tokenClassName === 'function' ? tokenClassName(token) : tokenClassName;
+          return '<span class="' + className + '">' + token + '</span>';
         });
-      }, textContent);
-      if (pos) {
-        _helper2.default.restoreSelection(this.htmlEl_, pos);
-      }
+      }, this.htmlEl_.innerHTML);
     }
   }]);
 

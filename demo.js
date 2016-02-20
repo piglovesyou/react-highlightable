@@ -13,10 +13,13 @@ ReactDOM.render(
     <Highlightable
       className="highlightable"
       onChange={onChange.bind(this)}
-      token={[Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION]}
-      highlighter={[
-        link => `<span class="hilite hilite--link">${link}</span>`,
-        user => `<span class="hilite hilite--user hilite--user-${~validUsers.indexOf(user.slice('@'.length)) ? 'valid' : 'invalid'}">${user}</span>`
+      token={[
+        Highlightable.TokenPreset.URL,
+        Highlightable.TokenPreset.USER_MENTION
+      ]}
+      tokenClassName={[
+        'hilite hilite--link',
+        token => `hilite hilite--user hilite--user-${~validUsers.indexOf(token.slice('@'.length)) ? 'valid' : 'invalid'}`
       ]}
       value='@jasmine and @belle are you still there? Visit www.google.com'
     ></Highlightable>
@@ -26,7 +29,7 @@ ReactDOM.render(
       className="highlightable"
       onChange={onChange.bind(this)}
       token={Highlightable.TokenPreset.EMAIL}
-      highlighter={(email) => `<span class="hilite hilite--email" href="mailto:${email}">${email}</span>`}
+      tokenClassName='hilite hilite--email'
       value='Give me an email to example@example.com.'
     ></Highlightable>
 
@@ -35,7 +38,7 @@ ReactDOM.render(
       className="highlightable"
       onChange={onChange.bind(this)}
       token='yeah|ohh'
-      highlighter={token => `<span class="hilite hilite--token">${token}</span>`}
+      tokenClassName='hilite hilite--token'
       value='Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque.'
     ></Highlightable>
 
