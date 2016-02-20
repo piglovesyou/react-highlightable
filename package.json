@@ -36,7 +36,11 @@
     ]
   },
   "scripts": {
-    "compile": "babel -d lib/ src/",
+    "compile": "babel -d lib src",
     "prepublish": "npm run compile"
+  },
+  "dependencies": {
+    "keycode": "^2.1.0",
+    "rangy": "^1.3.0"
   }
 }
