@@ -1,23 +1,24 @@
 {
-  "name": "react-contenteditable",
-  "version": "2.0.0",
-  "description": "React component representing a <div> with editable contents",
-  "main": "./lib/react-contenteditable.js",
+  "name": "react-highlightable",
+  "version": "0.0.1",
+  "description": "Highlightable textarea of React component using contenteditable",
+  "main": "./lib/react-highlightable.js",
   "peerDependencies": {
     "react": ">=0.13"
   },
-  "author": "Ophir LOJKINE (original code posted by Sebastien Lorber on stackoverflow)",
+  "author": "thepiglovesyou@gmail.com",
   "license": "Apache",
   "keywords": [
     "react-component",
     "contenteditable",
     "editable",
+    "highlight",
     "html",
     "react"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lovasoa/react-contenteditable.git"
+    "url": "https://github.com/piglovesyou/react-highlightable.git"
   },
   "devDependencies": {
     "babel-cli": ">=6",
