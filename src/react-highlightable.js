@@ -21,17 +21,16 @@ export default class Highlightable extends React.Component {
       }
       assert.fail();
     });
-    if (Array.isArray(this.props.highlighter)) {
-      assert(this.regexes_.length === this.props.highlighter.length);
-      this.highlighters_ = this.props.highlighter;
+    if (Array.isArray(this.props.tokenClassName)) {
+      assert(this.regexes_.length === this.props.tokenClassName.length);
+      this.tokenClassNames_ = this.props.tokenClassName;
     } else {
-      assert(typeof this.props.highlighter === 'function');
-      this.highlighters_ = [this.props.highlighter];
+      this.tokenClassNames_ = [this.props.tokenClassName];
     }
   }
 
   componentDidMount() {
-    this.highlight_(this.htmlEl_.textContent);
+    this.highlight_();
   }
 
   render() {
@@ -39,7 +38,7 @@ export default class Highlightable extends React.Component {
       this.props.tagName || 'div',
       Object.assign({}, this.props, {
         ref: (e) => this.htmlEl_ = e,
-        onInput: this.emitChange_,
+        onKeyUp: this.emitChange_,
         onBlur: this.emitChange_,
         contentEditable: !this.props.disabled,
         dangerouslySetInnerHTML: {__html: this.props.value}
@@ -52,30 +51,36 @@ export default class Highlightable extends React.Component {
   }
 
   emitChange_(evt) {
-    const textContent = this.htmlEl_.textContent;
-    if (textContent !== this.lastTextContent_) {
-      this.highlight_(textContent);
+    if (this.htmlEl_.innerHTML !== this.lastInnerHTML) {
+
+      if (Helper.keyIsAvailable(evt.nativeEvent)) {
+        let pos = Helper.saveSelection(this.htmlEl_);
+        this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g,"$1");
+        this.highlight_();
+        Helper.restoreSelection(this.htmlEl_, pos);
+      }
+
       if (this.props.onChange) {
-        evt.target.value = textContent;
+        const newlinePlaceHolder = '%%newline%%';
+        const fragment = document.createElement('div');
+        fragment.innerHTML = this.htmlEl_.innerHTML.replace(/<br>/g, newlinePlaceHolder);
+        const value = fragment.textContent.replace(new RegExp(newlinePlaceHolder, 'g'), '\n');
+        evt.target.value = value;
         this.props.onChange(evt);
       }
+
     }
-    this.lastTextContent_ = textContent;
+    this.lastInnerHTML = this.htmlEl_.innerHTML;
   }
 
-  highlight_(textContent) {
-    let pos;
-    try {
-      pos = Helper.saveSelection(this.htmlEl_);
-    } catch(e) {}
-    this.htmlEl_.innerHTML = this.regexes_.reduce((textContent, regex, index) => {
-      return textContent.replace(regex, (_, token, offset) => {
-        return this.highlighters_[index](token, offset);
+  highlight_() {
+    this.htmlEl_.innerHTML = this.regexes_.reduce((innerHTML, regex, index) => {
+      return innerHTML.replace(regex, (_, token) => {
+        const tokenClassName = this.tokenClassNames_[index];
+        const className = typeof tokenClassName === 'function' ? tokenClassName(token) : tokenClassName;
+        return `<span class="${className}">${token}</span>`;
       });
-    }, textContent);
-    if (pos) {
-      Helper.restoreSelection(this.htmlEl_, pos);
-    }
+    }, this.htmlEl_.innerHTML);
   }
 }
 

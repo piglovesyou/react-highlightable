@@ -3,6 +3,10 @@ import Rangy from 'rangy';
 // Excellent work by Ömür Yanıkoğlu
 // Thanks: http://stackoverflow.com/a/21437499
 module.exports = {
+    
+    keyIsAvailable: function(e){
+        return e.keyCode == 32 || (e.keyCode > 47 && e.keyCode < 91 && !e.ctrlKey && !e.shiftKey && !e.altKey);
+    },
 
     saveSelection: function(containerEl) {
         var charIndex = 0, start = 0, end = 0, foundStart = false, stop = {};
