@@ -30,6 +30,10 @@ export default class ContentEditable extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.highlight_(this.htmlEl_.textContent);
+  }
+
   render() {
     return React.createElement(
       this.props.tagName || 'div',
@@ -57,23 +61,32 @@ export default class ContentEditable extends React.Component {
   emitChange_(evt) {
     const textContent = this.htmlEl_.textContent;
     if (textContent !== this.lastTextContent_) {
-      const pos = Helper.saveSelection(this.htmlEl_);
-      let formatted;
-      if (this.prefixRegex_) {
-        formatted = textContent.replace(this.prefixRegex_, this.replaceFn_);
-      } else {
-        formatted = textContent;
-        for (let token in this.tokenRegexTable_) {
-          const tokenRegex = this.tokenRegexTable_[token];
-          formatted = formatted.replace(tokenRegex, this.replaceFn_);
-        }
-      }
-      this.htmlEl_.innerHTML = formatted;
-      Helper.restoreSelection(this.htmlEl_, pos);
+      this.highlight_(textContent);
       if (this.props.onChange) {
         this.props.onChange(evt);
       }
     }
     this.lastTextContent_ = textContent;
+  }
+
+  highlight_(textContent) {
+    let pos;
+    try {
+      pos = Helper.saveSelection(this.htmlEl_);
+    } catch(e) {}
+    let formatted;
+    if (this.prefixRegex_) {
+      formatted = textContent.replace(this.prefixRegex_, this.replaceFn_);
+    } else {
+      formatted = textContent;
+      for (let token in this.tokenRegexTable_) {
+        const tokenRegex = this.tokenRegexTable_[token];
+        formatted = formatted.replace(tokenRegex, this.replaceFn_);
+      }
+    }
+    this.htmlEl_.innerHTML = formatted;
+    if (pos) {
+      Helper.restoreSelection(this.htmlEl_, pos);
+    }
   }
 }
