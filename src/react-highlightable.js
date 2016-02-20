@@ -3,10 +3,10 @@ import Helper from './helper';
 import assert from 'power-assert';
 import TokenPreset from './token-preset';
 
-const newlineHtmlRegexp = /<br>/g;
 const newlineTmpPlaceholder = '%%newline%%';
 const newlineTmpPlaceholderRegexp = new RegExp(newlineTmpPlaceholder, 'g');
 const highlightedElementRegexp = /<span[\s\S]*?>([\s\S]*?)<\/span>/g;
+const newlineTargetRegexp = /(<div>)/g
 
 export default class Highlightable extends React.Component {
   constructor() {
@@ -86,7 +86,8 @@ export default class Highlightable extends React.Component {
 
   getValue() {
     const fragment = document.createElement('div');
-    fragment.innerHTML = this.htmlEl_.innerHTML.replace(newlineHtmlRegexp, newlineTmpPlaceholder);
+    fragment.innerHTML = this.htmlEl_.innerHTML
+        .replace(newlineTargetRegexp, newlineTmpPlaceholder + '$1')
     return fragment.textContent.replace(newlineTmpPlaceholderRegexp, '\n');
   }
 }
