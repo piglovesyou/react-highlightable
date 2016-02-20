@@ -1,33 +1,26 @@
 import React from 'react';
 import Helper from './helper';
 import assert from 'power-assert';
+import TokenPreset from './token-preset';
 
-export default class ContentEditable extends React.Component {
+export default class Highlightable extends React.Component {
   constructor() {
     super();
     this.emitChange_ = this.emitChange_.bind(this);
   }
 
   componentWillMount() {
-    if (this.props.prefix) {
-      this.prefixRegex_ = new RegExp(`(${this.props.prefix}[^s.]+)`, 'g');
-    } else if (this.props.tokens) {
-      this.tokenRegexTable_ = Object.create(null);
-      this.props.tokens.forEach(token => {
-        this.tokenRegexTable_[token] = new RegExp(`(${token})`, 'g');
-      });
-    } else {
-      assert.fail('booom');
-    }
-    if (this.prefixRegex_ && this.props.tokens.length) {
-      this.replaceFn_ = (_, token, offset) => {
-        return this.tokensTable_[token] ? this.props.highlighter(token, offset) : token;
-      };
-    } else {
-      this.replaceFn_ = (_, token, offset) => {
-        return this.props.highlighter(token, offset) || token;
-      };
-    }
+    assert(this.props.token);
+    const tokens = Array.isArray(this.props.token) ?
+        this.props.token : [this.props.token];
+    this.regexes_ = tokens.map(token => {
+      if (token instanceof RegExp) {
+        return token
+      } else if (typeof token === 'string') {
+        return new RegExp(`(${token})`, 'g');
+      }
+      assert.fail();
+    });
   }
 
   componentDidMount() {
@@ -74,19 +67,15 @@ export default class ContentEditable extends React.Component {
     try {
       pos = Helper.saveSelection(this.htmlEl_);
     } catch(e) {}
-    let formatted;
-    if (this.prefixRegex_) {
-      formatted = textContent.replace(this.prefixRegex_, this.replaceFn_);
-    } else {
-      formatted = textContent;
-      for (let token in this.tokenRegexTable_) {
-        const tokenRegex = this.tokenRegexTable_[token];
-        formatted = formatted.replace(tokenRegex, this.replaceFn_);
-      }
-    }
-    this.htmlEl_.innerHTML = formatted;
+    this.htmlEl_.innerHTML = this.regexes_.reduce((textContent, regex) => {
+      return textContent.replace(regex, (_, token, offset) => {
+        return this.props.highlighter(token, offset);
+      });
+    }, textContent);
     if (pos) {
       Helper.restoreSelection(this.htmlEl_, pos);
     }
   }
 }
+
+Highlightable.TokenPreset = TokenPreset;
