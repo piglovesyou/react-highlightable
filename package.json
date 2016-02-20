@@ -52,7 +52,7 @@
   },
   "scripts": {
     "demo": "browserify -o demo-bundled.js demo.js",
-    "gh-pages": "npm run demo && gh-pages-deploy",
+    "gh-pages": "npm run demo && git checkout gh-pages && git reset --hard origin/master && git push origin gh-pages --force && git checkout -",
     "compile": "BABEL_ENV=development babel -d lib src",
     "prepublish": "BABEL_ENV=production babel -d lib src"
   },
