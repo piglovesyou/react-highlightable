@@ -56,7 +56,7 @@ export default class Highlightable extends React.Component {
     if (textContent !== this.lastTextContent_) {
       this.highlight_(textContent);
       if (this.props.onChange) {
-        evt.value = textContent;
+        evt.target.value = textContent;
         this.props.onChange(evt);
       }
     }

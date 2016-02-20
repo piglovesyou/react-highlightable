@@ -51,7 +51,7 @@
     }
   },
   "scripts": {
-    "demo": "browserify -o demo-bundled.js demo.js",
+    "demo": "npm run compile && browserify -o demo-bundled.js demo.js",
     "compile": "BABEL_ENV=development babel -d lib src",
     "prepublish": "BABEL_ENV=production babel -d lib src"
   },
