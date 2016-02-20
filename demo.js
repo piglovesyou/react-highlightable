@@ -9,6 +9,7 @@ ReactDOM.render(
   <div>
 
     <h3>Example 1: User mention and URL</h3>
+    <p>Valid users: {validUsers.join(', ')}</p>
     <Highlightable
       className="highlightable"
       onChange={onChange.bind(this)}

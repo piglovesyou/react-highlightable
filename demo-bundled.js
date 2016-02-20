@@ -6,7 +6,7 @@ var ReactDOM = require('react-dom');
 var Highlightable = require('../react-highlightable');
 var validUsers = ["ariel", "belle", "jasmine"];
 
-ReactDOM.render(React.createElement("div", null, React.createElement("h3", null, "Example 1: User mention and URL"), React.createElement(Highlightable, {
+ReactDOM.render(React.createElement("div", null, React.createElement("h3", null, "Example 1: User mention and URL"), React.createElement("p", null, "Valid users: ", validUsers.join(', ')), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange.bind(undefined),
   token: [Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION],
@@ -36,10 +36,6 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
 
 function onChange(e) {
   console.log(e.target.value);
-}
-
-function highlighter(token) {
-  return '<a href="#" class="hilite">' + token + '</a>';
 }
 
 },{"../react-highlightable":3,"react":163,"react-dom":34}],2:[function(require,module,exports){
