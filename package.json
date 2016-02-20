@@ -23,7 +23,12 @@
     "babel-plugin-espower": "^2.1.2",
     "babel-plugin-unassert": "^2.0.1",
     "babel-preset-es2015": ">=6",
-    "power-assert": "^1.2.0"
+    "babel-preset-react": "^6.5.0",
+    "browserify": "^13.0.0",
+    "gh-pages-deploy": "^0.4.0",
+    "power-assert": "^1.2.0",
+    "react-dom": "^0.14.7",
+    "reactify": "^1.1.1"
   },
   "babel": {
     "presets": [
@@ -46,8 +51,23 @@
     }
   },
   "scripts": {
+    "demo": "browserify -o demo-bundled.js demo.js",
+    "gh-pages": "npm run demo && gh-pages-deploy",
     "compile": "BABEL_ENV=development babel -d lib src",
     "prepublish": "BABEL_ENV=production babel -d lib src"
+  },
+  "browserify": {
+    "debug": true,
+    "transform": [
+      [
+        "reactify",
+        {}
+      ],
+      [
+        "babelify",
+        {}
+      ]
+    ]
   },
   "dependencies": {
     "rangy": "^1.3.0",
