@@ -199,9 +199,10 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
-var newlineHtmlRegexp = /<br>/g;
 var newlineTmpPlaceholder = '%%newline%%';
 var newlineTmpPlaceholderRegexp = new RegExp(newlineTmpPlaceholder, 'g');
+var highlightedElementRegexp = /<span[\s\S]*?>([\s\S]*?)<\/span>/g;
+var newlineTargetRegexp = /(<div>)/g;
 
 var Highlightable = function (_React$Component) {
   _inherits(Highlightable, _React$Component);
@@ -223,7 +224,7 @@ var Highlightable = function (_React$Component) {
       (0, _powerAssert2.default)(_rec._expr(_rec._capt(_rec._capt(this.props, 'arguments/0/object').token, 'arguments/0'), {
         content: 'assert(this.props.token)',
         filepath: 'src/react-highlightable.js',
-        line: 17
+        line: 18
       }));
       var tokens = Array.isArray(this.props.token) ? this.props.token : [this.props.token];
       this.regexes_ = tokens.map(function (token) {
@@ -240,7 +241,7 @@ var Highlightable = function (_React$Component) {
         (0, _powerAssert2.default)(_rec2._expr(_rec2._capt(_rec2._capt(_rec2._capt(this.regexes_, 'arguments/0/left/object').length, 'arguments/0/left') === _rec2._capt(_rec2._capt(_rec2._capt(this.props, 'arguments/0/right/object/object').tokenClassName, 'arguments/0/right/object').length, 'arguments/0/right'), 'arguments/0'), {
           content: 'assert(this.regexes_.length === this.props.tokenClassName.length)',
           filepath: 'src/react-highlightable.js',
-          line: 29
+          line: 30
         }));
         this.tokenClassNames_ = this.props.tokenClassName;
       } else {
@@ -295,7 +296,7 @@ var Highlightable = function (_React$Component) {
     value: function highlight_() {
       var _this3 = this;
 
-      this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g, '$1');
+      this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
       this.htmlEl_.innerHTML = this.regexes_.reduce(function (innerHTML, regex, index) {
         return innerHTML.replace(regex, function (_, token) {
           var tokenClassName = _this3.tokenClassNames_[index];
@@ -308,7 +309,7 @@ var Highlightable = function (_React$Component) {
     key: 'getValue',
     value: function getValue() {
       var fragment = document.createElement('div');
-      fragment.innerHTML = this.htmlEl_.innerHTML.replace(newlineHtmlRegexp, newlineTmpPlaceholder);
+      fragment.innerHTML = this.htmlEl_.innerHTML.replace(newlineTargetRegexp, newlineTmpPlaceholder + '$1');
       return fragment.textContent.replace(newlineTmpPlaceholderRegexp, '\n');
     }
   }]);
