@@ -3,6 +3,10 @@ import Helper from './helper';
 import assert from 'power-assert';
 import TokenPreset from './token-preset';
 
+const newlineHtmlRegexp = /<br>/g;
+const newlineTmpPlaceholder = '%%newline%%';
+const newlineTmpPlaceholderRegexp = new RegExp(newlineTmpPlaceholder, 'g');
+
 export default class Highlightable extends React.Component {
   constructor() {
     super();
@@ -55,17 +59,12 @@ export default class Highlightable extends React.Component {
 
       if (Helper.keyIsAvailable(evt.nativeEvent)) {
         let pos = Helper.saveSelection(this.htmlEl_);
-        this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g,"$1");
         this.highlight_();
         Helper.restoreSelection(this.htmlEl_, pos);
       }
 
       if (this.props.onChange) {
-        const newlinePlaceHolder = '%%newline%%';
-        const fragment = document.createElement('div');
-        fragment.innerHTML = this.htmlEl_.innerHTML.replace(/<br>/g, newlinePlaceHolder);
-        const value = fragment.textContent.replace(new RegExp(newlinePlaceHolder, 'g'), '\n');
-        evt.target.value = value;
+        evt.target.value = this.getValue();
         this.props.onChange(evt);
       }
 
@@ -74,6 +73,7 @@ export default class Highlightable extends React.Component {
   }
 
   highlight_() {
+    this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g, '$1');
     this.htmlEl_.innerHTML = this.regexes_.reduce((innerHTML, regex, index) => {
       return innerHTML.replace(regex, (_, token) => {
         const tokenClassName = this.tokenClassNames_[index];
@@ -81,6 +81,12 @@ export default class Highlightable extends React.Component {
         return `<span class="${className}">${token}</span>`;
       });
     }, this.htmlEl_.innerHTML);
+  }
+
+  getValue() {
+    const fragment = document.createElement('div');
+    fragment.innerHTML = this.htmlEl_.innerHTML.replace(newlineHtmlRegexp, newlineTmpPlaceholder);
+    return fragment.textContent.replace(newlineTmpPlaceholderRegexp, '\n');
   }
 }
 
