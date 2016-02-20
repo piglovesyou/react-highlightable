@@ -1,5 +1,6 @@
 import React from 'react';
 import Helper from './helper';
+import assert from 'power-assert';
 
 export default class ContentEditable extends React.Component {
   constructor() {
@@ -16,7 +17,7 @@ export default class ContentEditable extends React.Component {
         this.tokenRegexTable_[token] = new RegExp(`(${token})`, 'g');
       });
     } else {
-      throw new Error();
+      assert.fail('booom');
     }
     if (this.prefixRegex_ && this.props.tokens.length) {
       this.replaceFn_ = (_, token, offset) => {
