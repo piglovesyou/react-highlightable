@@ -21,6 +21,13 @@ export default class Highlightable extends React.Component {
       }
       assert.fail();
     });
+    if (Array.isArray(this.props.highlighter)) {
+      assert(this.regexes_.length === this.props.highlighter.length);
+      this.highlighters_ = this.props.highlighter;
+    } else {
+      assert(typeof this.props.highlighter === 'function');
+      this.highlighters_ = [this.props.highlighter];
+    }
   }
 
   componentDidMount() {
@@ -35,9 +42,8 @@ export default class Highlightable extends React.Component {
         onInput: this.emitChange_,
         onBlur: this.emitChange_,
         contentEditable: !this.props.disabled,
-        dangerouslySetInnerHTML: {__html: this.props.html}
-      }),
-      this.props.children);
+        dangerouslySetInnerHTML: {__html: this.props.value}
+      }));
   }
 
   shouldComponentUpdate(nextProps) {
@@ -45,17 +51,12 @@ export default class Highlightable extends React.Component {
            this.props.disabled !== nextProps.disabled;
   }
 
-  componentDidUpdate() {
-    if ( this.props.html !== this.htmlEl_.innerHTML ) {
-     this.htmlEl_.innerHTML = this.props.html;
-    }
-  }
-
   emitChange_(evt) {
     const textContent = this.htmlEl_.textContent;
     if (textContent !== this.lastTextContent_) {
       this.highlight_(textContent);
       if (this.props.onChange) {
+        evt.value = textContent;
         this.props.onChange(evt);
       }
     }
@@ -67,9 +68,9 @@ export default class Highlightable extends React.Component {
     try {
       pos = Helper.saveSelection(this.htmlEl_);
     } catch(e) {}
-    this.htmlEl_.innerHTML = this.regexes_.reduce((textContent, regex) => {
+    this.htmlEl_.innerHTML = this.regexes_.reduce((textContent, regex, index) => {
       return textContent.replace(regex, (_, token, offset) => {
-        return this.props.highlighter(token, offset);
+        return this.highlighters_[index](token, offset);
       });
     }, textContent);
     if (pos) {

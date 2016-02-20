@@ -1,11 +1,8 @@
 {
   "name": "react-highlightable",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Highlightable textarea of React component using contenteditable",
   "main": "./lib/react-highlightable.js",
-  "peerDependencies": {
-    "react": ">=0.13"
-  },
   "author": "thepiglovesyou@gmail.com",
   "license": "Apache",
   "keywords": [
@@ -53,7 +50,7 @@
     "prepublish": "BABEL_ENV=production babel -d lib src"
   },
   "dependencies": {
-    "keycode": "^2.1.0",
-    "rangy": "^1.3.0"
+    "rangy": "^1.3.0",
+    "react": "^0.14.7"
   }
 }
