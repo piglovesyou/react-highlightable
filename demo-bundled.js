@@ -4,6 +4,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Highlightable = require('../react-highlightable');
+var validUsers = ["ariel", "belle", "jasmine"];
 
 ReactDOM.render(React.createElement("div", null, React.createElement("h3", null, "Example 1: User mention and URL"), React.createElement(Highlightable, {
   className: "highlightable",
@@ -12,9 +13,9 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
   highlighter: [function (link) {
     return '<span class="hilite hilite--link">' + link + '</span>';
   }, function (user) {
-    return '<span class="hilite hilite--user">' + user + '</span>';
+    return '<span class="hilite hilite--user hilite--user-' + (~validUsers.indexOf(user.slice('@'.length)) ? 'valid' : 'invalid') + '">' + user + '</span>';
   }],
-  value: "@one and @two are you still there? www.google.com"
+  value: "@jasmine and @belle are you still there? Visit www.google.com"
 }), React.createElement("h3", null, "Example 2: Email"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange.bind(undefined),
@@ -22,7 +23,7 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
   highlighter: function highlighter(email) {
     return '<span class="hilite hilite--email" href="mailto:' + email + '">' + email + '</span>';
   },
-  value: "Visit example.com or give me an email to yeah@yeah.com."
+  value: "Give me an email to example@example.com."
 }), React.createElement("h3", null, "Example 3: Prohibited tokens"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange.bind(undefined),
