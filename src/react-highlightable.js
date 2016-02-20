@@ -6,6 +6,7 @@ import TokenPreset from './token-preset';
 const newlineHtmlRegexp = /<br>/g;
 const newlineTmpPlaceholder = '%%newline%%';
 const newlineTmpPlaceholderRegexp = new RegExp(newlineTmpPlaceholder, 'g');
+const highlightedElementRegexp = /<span[\s\S]*?>([\s\S]*?)<\/span>/g;
 
 export default class Highlightable extends React.Component {
   constructor() {
@@ -73,7 +74,7 @@ export default class Highlightable extends React.Component {
   }
 
   highlight_() {
-    this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(/<span[\s\S]*?>([\s\S]*?)<\/span>/g, '$1');
+    this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
     this.htmlEl_.innerHTML = this.regexes_.reduce((innerHTML, regex, index) => {
       return innerHTML.replace(regex, (_, token) => {
         const tokenClassName = this.tokenClassNames_[index];
