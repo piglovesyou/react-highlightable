@@ -20,7 +20,7 @@ ReactDOM.render(
     <p>Valid users: {validUsers.join(', ')}</p>
     <Highlightable
       className="highlightable"
-      onChange={onChange.bind(this)}
+      onChange={onChange}
       token={[
         Highlightable.TokenPreset.URL,
         Highlightable.TokenPreset.USER_MENTION
@@ -28,8 +28,7 @@ ReactDOM.render(
       tokenClassName={[
         'hilite hilite--link',
         token => `hilite hilite--user hilite--user-${
-            validUsers.includes(token.slice('@'.length)) ?
-            'valid' : 'invalid'}`
+            validUsers.includes(token.slice('@'.length)) ?  'valid' : 'invalid'}`
       ]}
       value='@jasmine and @belle are you still there? Visit www.google.com'
     ></Highlightable>
@@ -37,7 +36,7 @@ ReactDOM.render(
     <h3>Example 2: Email</h3>
     <Highlightable
       className="highlightable"
-      onChange={onChange.bind(this)}
+      onChange={onChange}
       token={Highlightable.TokenPreset.EMAIL}
       tokenClassName='hilite hilite--email'
       value='Give me an email to example@example.com.'
@@ -46,7 +45,7 @@ ReactDOM.render(
     <h3>Example 3: Prohibited tokens</h3>
     <Highlightable
       className="highlightable"
-      onChange={onChange.bind(this)}
+      onChange={onChange}
       token='yeah|ohh'
       tokenClassName='hilite hilite--token'
       value='Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque.'
