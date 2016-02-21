@@ -8,7 +8,7 @@ var validUsers = ["ariel", "belle", "jasmine"];
 
 ReactDOM.render(React.createElement("div", null, React.createElement("h3", null, "Example 1: User mention and URL"), React.createElement("p", null, "Valid users: ", validUsers.join(', ')), React.createElement(Highlightable, {
   className: "highlightable",
-  onChange: onChange.bind(undefined),
+  onChange: onChange,
   token: [Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION],
   tokenClassName: ['hilite hilite--link', function (token) {
     return 'hilite hilite--user hilite--user-' + (validUsers.includes(token.slice('@'.length)) ? 'valid' : 'invalid');
@@ -16,13 +16,13 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
   value: "@jasmine and @belle are you still there? Visit www.google.com"
 }), React.createElement("h3", null, "Example 2: Email"), React.createElement(Highlightable, {
   className: "highlightable",
-  onChange: onChange.bind(undefined),
+  onChange: onChange,
   token: Highlightable.TokenPreset.EMAIL,
   tokenClassName: "hilite hilite--email",
   value: "Give me an email to example@example.com."
 }), React.createElement("h3", null, "Example 3: Prohibited tokens"), React.createElement(Highlightable, {
   className: "highlightable",
-  onChange: onChange.bind(undefined),
+  onChange: onChange,
   token: "yeah|ohh",
   tokenClassName: "hilite hilite--token",
   value: "Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque."
