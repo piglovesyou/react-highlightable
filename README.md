@@ -21,14 +21,11 @@ ReactDOM.render(
     <Highlightable
       className="highlightable"
       onChange={onChange}
-      token={[
-        Highlightable.TokenPreset.URL,
-        Highlightable.TokenPreset.USER_MENTION
-      ]}
-      tokenClassName={[
-        'hilite hilite--link',
-        token => `hilite hilite--user hilite--user-${
-            validUsers.includes(token.slice('@'.length)) ?  'valid' : 'invalid'}`
+      pairs={[
+        [Highlightable.TokenPreset.URL, 'hilite hilite--link'],
+        [Highlightable.TokenPreset.USER_MENTION,
+            token => `hilite hilite--user hilite--user-${
+                validUsers.includes(token.slice('@'.length)) ?  'valid' : 'invalid'}`]
       ]}
       value='@jasmine and @belle are you still there? Visit www.google.com'
     ></Highlightable>
@@ -37,8 +34,9 @@ ReactDOM.render(
     <Highlightable
       className="highlightable"
       onChange={onChange}
-      token={Highlightable.TokenPreset.EMAIL}
-      tokenClassName='hilite hilite--email'
+      pairs={[
+        [Highlightable.TokenPreset.EMAIL, 'hilite hilite--email']
+      ]}
       value='Give me an email to example@example.com.'
     ></Highlightable>
 
@@ -46,8 +44,9 @@ ReactDOM.render(
     <Highlightable
       className="highlightable"
       onChange={onChange}
-      token='yeah|ohh'
-      tokenClassName='hilite hilite--token'
+      pairs={[
+        ['yeah|ohh', 'hilite hilite--token']
+      ]}
       value='Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque.'
     ></Highlightable>
 

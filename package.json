@@ -1,6 +1,6 @@
 {
   "name": "react-highlightable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Highlightable textarea of React component using contenteditable",
   "main": "./lib/react-highlightable.js",
   "author": "thepiglovesyou@gmail.com",
