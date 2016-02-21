@@ -11,7 +11,7 @@ ReactDOM.render(React.createElement("div", null, React.createElement("h3", null,
   onChange: onChange.bind(undefined),
   token: [Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION],
   tokenClassName: ['hilite hilite--link', function (token) {
-    return 'hilite hilite--user hilite--user-' + (~validUsers.indexOf(token.slice('@'.length)) ? 'valid' : 'invalid');
+    return 'hilite hilite--user hilite--user-' + (validUsers.includes(token.slice('@'.length)) ? 'valid' : 'invalid');
   }],
   value: "@jasmine and @belle are you still there? Visit www.google.com"
 }), React.createElement("h3", null, "Example 2: Email"), React.createElement(Highlightable, {
