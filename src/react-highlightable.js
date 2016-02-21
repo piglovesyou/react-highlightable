@@ -15,22 +15,13 @@ export default class Highlightable extends React.Component {
   }
 
   componentWillMount() {
-    assert(this.props.token);
-    const tokens = Array.isArray(this.props.token) ?
-        this.props.token : [this.props.token];
-    this.regexes_ = tokens.map(token => {
-      if (token instanceof RegExp) {
-        return token
-      } else if (typeof token === 'string') {
-        return new RegExp(`(${token})`, 'g');
-      }
-      assert.fail();
-    });
-    if (Array.isArray(this.props.tokenClassName)) {
-      assert(this.regexes_.length === this.props.tokenClassName.length);
-      this.tokenClassNames_ = this.props.tokenClassName;
-    } else {
-      this.tokenClassNames_ = [this.props.tokenClassName];
+    assert(this.props.pairs);
+    assert(Array.isArray(this.props.pairs) || this.props.pairs instanceof Map);
+    this.pairs_ = new Map();
+    for (let [pattern, className] of this.props.pairs) {
+      assert(pattern instanceof RegExp || typeof pattern === 'string');
+      assert(typeof className === 'function' || typeof className === 'string');
+      this.pairs_.set(pattern instanceof RegExp ? pattern : new RegExp(`(${pattern})`, 'g'), className);
     }
   }
 
@@ -74,14 +65,14 @@ export default class Highlightable extends React.Component {
   }
 
   highlight_() {
-    this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
-    this.htmlEl_.innerHTML = this.regexes_.reduce((innerHTML, regex, index) => {
-      return innerHTML.replace(regex, (_, token) => {
-        const tokenClassName = this.tokenClassNames_[index];
-        const className = typeof tokenClassName === 'function' ? tokenClassName(token) : tokenClassName;
-        return `<span class="${className}">${token}</span>`;
+    let innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
+    for (let [pattern, className] of this.pairs_) {
+      innerHTML = innerHTML.replace(pattern, (_, token) => {
+        const cn = typeof className === 'function' ? className(token) : className;
+        return `<span class="${cn}">${token}</span>`;
       });
-    }, this.htmlEl_.innerHTML);
+    }
+    this.htmlEl_.innerHTML = innerHTML;
   }
 
   getValue() {
