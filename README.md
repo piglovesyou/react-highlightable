@@ -27,7 +27,9 @@ ReactDOM.render(
       ]}
       tokenClassName={[
         'hilite hilite--link',
-        token => `hilite hilite--user hilite--user-${~validUsers.indexOf(token.slice('@'.length)) ? 'valid' : 'invalid'}`
+        token => `hilite hilite--user hilite--user-${
+            validUsers.includes(token.slice('@'.length)) ?
+            'valid' : 'invalid'}`
       ]}
       value='@jasmine and @belle are you still there? Visit www.google.com'
     ></Highlightable>
