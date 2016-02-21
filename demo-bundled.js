@@ -9,22 +9,19 @@ var validUsers = ["ariel", "belle", "jasmine"];
 ReactDOM.render(React.createElement("div", null, React.createElement("h3", null, "Example 1: User mention and URL"), React.createElement("p", null, "Valid users: ", validUsers.join(', ')), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange,
-  token: [Highlightable.TokenPreset.URL, Highlightable.TokenPreset.USER_MENTION],
-  tokenClassName: ['hilite hilite--link', function (token) {
+  pairs: [[Highlightable.TokenPreset.URL, 'hilite hilite--link'], [Highlightable.TokenPreset.USER_MENTION, function (token) {
     return 'hilite hilite--user hilite--user-' + (validUsers.includes(token.slice('@'.length)) ? 'valid' : 'invalid');
-  }],
+  }]],
   value: "@jasmine and @belle are you still there? Visit www.google.com"
 }), React.createElement("h3", null, "Example 2: Email"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange,
-  token: Highlightable.TokenPreset.EMAIL,
-  tokenClassName: "hilite hilite--email",
+  pairs: [[Highlightable.TokenPreset.EMAIL, 'hilite hilite--email']],
   value: "Give me an email to example@example.com."
 }), React.createElement("h3", null, "Example 3: Prohibited tokens"), React.createElement(Highlightable, {
   className: "highlightable",
   onChange: onChange,
-  token: "yeah|ohh",
-  tokenClassName: "hilite hilite--token",
+  pairs: [['yeah|ohh', 'hilite hilite--token']],
   value: "Lorem ipsum dolor sit amet, yeah consectetur adipiscing elit. Duis eget leo lorem. ohhVivamus pretium risus ac orci molestie, eget malesuada est scelerisque."
 })), document.getElementById('app'));
 
@@ -135,11 +132,43 @@ module.exports = {
 },{"rangy":87}],3:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
+
+var _slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;_e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }return _arr;
+  }return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
 
 var _createClass = function () {
   function defineProperties(target, props) {
@@ -190,12 +219,12 @@ function _classCallCheck(instance, Constructor) {
 function _possibleConstructorReturn(self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof2(call)) === "object" || typeof call === "function") ? call : self;
 }
 
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof2(superClass)));
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
@@ -219,33 +248,77 @@ var Highlightable = function (_React$Component) {
   _createClass(Highlightable, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var _rec = new _powerAssertRecorder();
+      var _rec = new _powerAssertRecorder(),
+          _rec2 = new _powerAssertRecorder();
 
-      (0, _powerAssert2.default)(_rec._expr(_rec._capt(_rec._capt(this.props, 'arguments/0/object').token, 'arguments/0'), {
-        content: 'assert(this.props.token)',
+      (0, _powerAssert2.default)(_rec._expr(_rec._capt(_rec._capt(this.props, 'arguments/0/object').pairs, 'arguments/0'), {
+        content: 'assert(this.props.pairs)',
         filepath: 'src/react-highlightable.js',
         line: 18
       }));
-      var tokens = Array.isArray(this.props.token) ? this.props.token : [this.props.token];
-      this.regexes_ = tokens.map(function (token) {
-        if (token instanceof RegExp) {
-          return token;
-        } else if (typeof token === 'string') {
-          return new RegExp('(' + token + ')', 'g');
-        }
-        _powerAssert2.default.fail();
-      });
-      if (Array.isArray(this.props.tokenClassName)) {
-        var _rec2 = new _powerAssertRecorder();
+      (0, _powerAssert2.default)(_rec2._expr(_rec2._capt(_rec2._capt(_rec2._capt(Array, 'arguments/0/left/callee/object').isArray(_rec2._capt(_rec2._capt(this.props, 'arguments/0/left/arguments/0/object').pairs, 'arguments/0/left/arguments/0')), 'arguments/0/left') || _rec2._capt(_rec2._capt(_rec2._capt(this.props, 'arguments/0/right/left/object').pairs, 'arguments/0/right/left') instanceof _rec2._capt(Map, 'arguments/0/right/right'), 'arguments/0/right'), 'arguments/0'), {
+        content: 'assert(Array.isArray(this.props.pairs) || this.props.pairs instanceof Map)',
+        filepath: 'src/react-highlightable.js',
+        line: 19
+      }));
+      this.pairs_ = new Map();
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-        (0, _powerAssert2.default)(_rec2._expr(_rec2._capt(_rec2._capt(_rec2._capt(this.regexes_, 'arguments/0/left/object').length, 'arguments/0/left') === _rec2._capt(_rec2._capt(_rec2._capt(this.props, 'arguments/0/right/object/object').tokenClassName, 'arguments/0/right/object').length, 'arguments/0/right'), 'arguments/0'), {
-          content: 'assert(this.regexes_.length === this.props.tokenClassName.length)',
-          filepath: 'src/react-highlightable.js',
-          line: 30
-        }));
-        this.tokenClassNames_ = this.props.tokenClassName;
-      } else {
-        this.tokenClassNames_ = [this.props.tokenClassName];
+      try {
+        for (var _iterator = this.props.pairs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _rec3 = new _powerAssertRecorder(),
+              _rec4 = new _powerAssertRecorder();
+
+          var _step$value = _slicedToArray(_step.value, 2);
+
+          var pattern = _step$value[0];
+          var className = _step$value[1];
+
+          (0, _powerAssert2.default)(_rec3._expr(_rec3._capt(_rec3._capt(_rec3._capt(pattern, 'arguments/0/left/left') instanceof _rec3._capt(RegExp, 'arguments/0/left/right'), 'arguments/0/left') || _rec3._capt(_rec3._capt(typeof pattern === 'undefined' ? 'undefined' : _typeof(pattern), 'arguments/0/right/left') === 'string', 'arguments/0/right'), 'arguments/0'), {
+            content: 'assert(pattern instanceof RegExp || typeof pattern === \'string\')',
+            filepath: 'src/react-highlightable.js',
+            line: 22
+          }));
+          (0, _powerAssert2.default)(_rec4._expr(_rec4._capt(_rec4._capt(_rec4._capt(typeof className === 'undefined' ? 'undefined' : _typeof(className), 'arguments/0/left/left') === 'function', 'arguments/0/left') || _rec4._capt(_rec4._capt(typeof className === 'undefined' ? 'undefined' : _typeof(className), 'arguments/0/right/left') === 'string', 'arguments/0/right'), 'arguments/0'), {
+            content: 'assert(typeof className === \'function\' || typeof className === \'string\')',
+            filepath: 'src/react-highlightable.js',
+            line: 23
+          }));
+          this.pairs_.set(pattern instanceof RegExp ? pattern : new RegExp('(' + pattern + ')', 'g'), className);
+        }
+
+        // assert(this.props.token);
+        // const tokens = Array.isArray(this.props.token) ?
+        //     this.props.token : [this.props.token];
+        // this.regexes_ = tokens.map(token => {
+        //   if (token instanceof RegExp) {
+        //     return token
+        //   } else if (typeof token === 'string') {
+        //     return new RegExp(`(${token})`, 'g');
+        //   }
+        //   assert.fail();
+        // });
+        // if (Array.isArray(this.props.tokenClassName)) {
+        //   assert(this.regexes_.length === this.props.tokenClassName.length);
+        //   this.tokenClassNames_ = this.props.tokenClassName;
+        // } else {
+        //   this.tokenClassNames_ = [this.props.tokenClassName];
+        // }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
     }
   }, {
@@ -294,16 +367,43 @@ var Highlightable = function (_React$Component) {
   }, {
     key: 'highlight_',
     value: function highlight_() {
-      var _this3 = this;
+      var innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-      this.htmlEl_.innerHTML = this.htmlEl_.innerHTML.replace(highlightedElementRegexp, '$1');
-      this.htmlEl_.innerHTML = this.regexes_.reduce(function (innerHTML, regex, index) {
-        return innerHTML.replace(regex, function (_, token) {
-          var tokenClassName = _this3.tokenClassNames_[index];
-          var className = typeof tokenClassName === 'function' ? tokenClassName(token) : tokenClassName;
-          return '<span class="' + className + '">' + token + '</span>';
-        });
-      }, this.htmlEl_.innerHTML);
+      try {
+        var _loop = function _loop() {
+          var _step2$value = _slicedToArray(_step2.value, 2);
+
+          var pattern = _step2$value[0];
+          var className = _step2$value[1];
+
+          innerHTML = innerHTML.replace(pattern, function (_, token) {
+            var cn = typeof className === 'function' ? className(token) : className;
+            return '<span class="' + cn + '">' + token + '</span>';
+          });
+        };
+
+        for (var _iterator2 = this.pairs_[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          _loop();
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      this.htmlEl_.innerHTML = innerHTML;
     }
   }, {
     key: 'getValue',
